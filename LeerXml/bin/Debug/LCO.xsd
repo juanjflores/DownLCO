@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by SAT (SAT) -->
+<xs:schema xmlns:lco="http:/www.sat.gob.mx/cfd/LCO" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http:/www.sat.gob.mx/cfd/LCO" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="LCO">
+		<xs:annotation>
+			<xs:documentation>Esquema de datos para la Lista de Contribuyentes con derecho a la emisión de facturas electrónicas</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Contribuyente" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Elemento requerido para expresar los datos de un contribuyente con derecho a la emisión de facturas electrónicas</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Certificado" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Elemento requerido para expresar los certificados de sello digital de un contribuyente con derecho a emisión de facturas electrónicas</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:attribute name="FechaInicio" type="xs:dateTime" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar la fecha de inicio del certificado de sello digital</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="FechaFinal" type="xs:dateTime" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar la fecha final del certificado de sello digital</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="noCertificado" use="required">
+										<xs:annotation>
+											<xs:documentation> Atributo requerido para expresar el número de serie del certificado de sello digital </xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:length value="20"/>
+												<xs:whiteSpace value="collapse"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="EstatusCertificado" type="lco:t_ValidacionCertificado" use="required">
+										<xs:annotation>
+											<xs:documentation> Atributo requerido para expresar la validez del certificado de sello digital </xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="ValidezObligaciones" type="lco:t_Validacion" use="required">
+										<xs:annotation>
+											<xs:documentation> Atributo requerido para expresar la validez de las obligaciones del certificado de sello digital </xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="RFC" type="lco:t_RFC" use="required">
+							<xs:annotation>
+								<xs:documentation>Atributo requerido para la Clave del Registro Federal de Contribuyentes correspondiente al contribuyente emisor</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Fecha" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para representar la fecha de emisión de la lista</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+		<xs:unique name="RFC">
+			<xs:selector xpath="lco:Contribuyente"/>
+			<xs:field xpath="@RFC"/>
+		</xs:unique>
+	</xs:element>
+	<xs:simpleType name="t_RFC">
+		<xs:annotation>
+			<xs:documentation>Tipo definido para expresar claves del Registro Federal de Contribuyentes</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="12"/>
+			<xs:maxLength value="13"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="t_Validacion">
+		<xs:annotation>
+			<xs:documentation>
+				Tipo definido para expresar el tipo de operación relacionada al	estadístico.				
+				</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					Los valores validos para la operación son	(cancelación, recepción).
+				</xs:documentation>
+			</xs:annotation>
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="t_ValidacionCertificado">
+		<xs:annotation>
+			<xs:documentation>
+				Tipo definido para expresar el tipo de operación relacionada al	estadístico.				
+				</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					Los valores validos para la operación son.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="C"/>
+			<xs:enumeration value="R"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
