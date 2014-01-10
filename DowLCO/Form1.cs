@@ -18,7 +18,13 @@ using System.Net;
 
 namespace DowLCO
 {
-  
+  /*
+   * 09/01/2013
+   * De: Descarga listas LCO del SAT del ftp 
+   * descompribe las listas
+   * Para almacenarlos en un txt global
+   * GSM 
+   */
 
     public partial class Form1 : Form
     {
