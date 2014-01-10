@@ -1,0 +1,11 @@
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\bin\Debug\DowLCO.exe
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\bin\Debug\DowLCO.pdb
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\bin\Debug\ChilkatDotNet2.dll
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\bin\Debug\Ionic.Zip.dll
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\DowLCO.Form1.resources
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\DowLCO.Properties.Resources.resources
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\ResGen.read.1.tlog
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\ResGen.write.1.tlog
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\DowLCO.exe
+C:\Users\Design\Documents\Visual Studio 2010\Projects\DowLCO\DowLCO\obj\x86\Debug\DowLCO.pdb
