@@ -9,90 +9,102 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml;
 using System.IO;
-using System.Collections;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
-using Ionic.Zip;
-using Schematrix;
 using System.Net;
 using System.Timers;
 
 namespace DowLCO
 {
-  
-
     public partial class Form1 : Form
     {
-        private static System.Timers.Timer aTimer;
+        private static System.Timers.Timer timer2;            
+             
+        string pathDown = "ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/LCO_";
+        //directorio guardará los archivos
+        string rutaXMLSat = @"C:\DowLCO\";        
+        //Declaración de variables
+        //definen el estatus, si los archivos han sido descargados
+        private static int downEnd1;  
+        public static int DownEnd1
+        {
+            get { return Form1.downEnd1; }
+            set { Form1.downEnd1 = value; }
+        }
+        private static int downEnd2;
+
+        public static int DownEnd2
+        {
+            get { return Form1.downEnd2; }
+            set { Form1.downEnd2 = value; }
+        }
+        private static int downEnd3;
+
+        public static int DownEnd3
+        {
+            get { return Form1.downEnd3; }
+            set { Form1.downEnd3 = value; }
+        }              
+
         public Form1()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {     
-            int numAr = 0;                      
-            //Get fecha actual
-            DateTime fechaAct = DateTime.Today;
-            string fechaActs = fechaAct.ToString("yyy-MM-dd");
-            string pathDown = "ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/LCO_";
-
-            //**************  Crea el directorio
-            string rutaXMLSat = @"C:\DowLCO\";
+        {   
+            //**************  Crea el directorio donde se descargaran los archivos
+           // string rutaXMLSat = @"C:\DowLCO\";
             if (!Directory.Exists(rutaXMLSat)) {
                 Directory.CreateDirectory(rutaXMLSat);
-            }          
-           //*********************************Descargar de: ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/          
-            System.Windows.Forms.Timer MyTimer = new System.Windows.Forms.Timer();
+            }                   
             
-                // Create a timer with a ten second interval.
-                aTimer = new System.Timers.Timer(10000);
-                // Hook up the Elapsed event for the timer.
-                aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                // Set the Interval to 2 seconds (2000 milliseconds).
-                aTimer.Interval = 2000;
-                aTimer.Enabled = true;
-
-                /************************DESCARGA DE FTP*/
-                WebClient webClient = new WebClient();
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient.DownloadFileAsync(new Uri(pathDown + fechaActs + "_1.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_1.XML.gz");
+            //Función download files
+            DownloadFiles();
+            //valida cada 2 segundos si las baderas han cambiado de estatus (descarga de archivos)
+            timer2 = new System.Timers.Timer(10000);
+            // Hook up the Elapsed event for the timer.
+            timer2.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            // Set the Interval to 2 seconds (2000 milliseconds).
+            timer2.Interval = 2000;
+            timer2.Enabled = true;            
+        }            
                 
-                WebClient webClient1 = new WebClient();
-                webClient1.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient1.DownloadFileAsync(new Uri(pathDown + fechaActs + "_2.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_2.XML.gz");
+        public void DownloadFiles(){
+            //Get fecha actual
+            DateTime fechaAct = DateTime.Today;
+            string fechaActs = fechaAct.ToString("yyy-MM-dd");            
+           
+            //Download file de ftp
+            WebClient webClient = new WebClient();
+            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed1);
+            webClient.DownloadFileAsync(new Uri(pathDown + fechaActs + "_1.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_1.XML.gz");           
 
-                WebClient webClient2 = new WebClient();
-                webClient2.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient2.DownloadFileAsync(new Uri(pathDown + fechaActs + "_3.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_3.XML.gz");
-               
-            
-            //********************* Extraer archivos de .gz 
-            for (numAr = 1; numAr <= 3; numAr++)
+            WebClient webClient1 = new WebClient();
+            webClient1.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed2);
+            webClient1.DownloadFileAsync(new Uri(pathDown + fechaActs + "_2.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_2.XML.gz");
+
+            WebClient webClient2 = new WebClient();
+            webClient2.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed3);
+            webClient2.DownloadFileAsync(new Uri(pathDown + fechaActs + "_3.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_3.XML.gz");
+        }
+
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)
+        {   //valida si las banderas han cambiado de estatus
+            //para continuar 
+            if ((Form1.downEnd1 == 1) && (Form1.downEnd2 == 1) && (Form1.downEnd3 == 1))
             {
-                Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_" + numAr + ".XML.gz");
-              //  Extrgz(@"C:\DowLCO\LCO_2014-01-06_2.XML.gz");
-               // Extrgz(@"C:\DowLCO\LCO_2014-01-06_3.XML.gz");    
+                timer2.Enabled = false;
+                //llama leerXml
+                LeerXML();
             }
+        }
 
-
-            /*
-            Extrgz(@"C:\DowLCO\LCO_2014-01-06_1.XML.gz");
-            Extrgz(@"C:\DowLCO\LCO_2014-01-06_2.XML.gz");
-            Extrgz(@"C:\DowLCO\LCO_2014-01-06_3.XML.gz");    
-            */
-
-            //*************************Leer direcctorio donde se encuentran los xml descargados
-            
-            //Recorrer los archivos                       
-             for (numAr = 1; numAr <= 3; numAr++)  {
-                  //***********************Quitar firma   
-                  Process process = new Process();
-                  process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\Windows\System32\cmd.exe", "/C C:\\OpenSSl\\bin\\openssl.exe smime -decrypt -verify -inform DER -in \"C:\\DowLCO\\LCO_2014-01-06_"+ numAr +".xml\" -noverify -out \"C:\\DowLCO\\LCO_2014-01-06_"+ numAr +"_L.xml\"");
-                  process.Start();
-                  process.WaitForExit();
-              }
-          
+        public static void LeerXML() {
+            //************************Leer direcctorio donde se encuentran los xml descargados
+            int numAr = 0;
+            DateTime fechaAct = DateTime.Today;
+            string fechaActs = fechaAct.ToString("yyy-MM-dd");
+           
             //************************* Crear directorio txt donde se almacenara info
             string pathLCO = "C:\\DowLCO\\LCO.txt";
             if (File.Exists(pathLCO))
@@ -102,23 +114,33 @@ namespace DowLCO
             //Crea directorio
             StreamWriter arch = new StreamWriter(pathLCO, true, Encoding.ASCII);
 
-            //************************Leer file XML            
+            //Recorrer los archivos                       
             for (numAr = 1; numAr <= 3; numAr++)
             {
+                //***********************Quitar firma   
+                Process process = new Process();                
+                process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\Windows\System32\cmd.exe", "/C C:\\OpenSSl\\bin\\openssl.exe smime -decrypt -verify -inform DER -in \"C:\\DowLCO\\LCO_"+fechaActs+"_" + numAr + ".xml\" -noverify -out \"C:\\DowLCO\\LCO_"+fechaActs+"_" + numAr + "_L.xml\"");
+                process.Start();
+                process.WaitForExit();
+            }
+
+            //************************Leer file XML            
+            for (numAr = 1; numAr <= 3; numAr++)
+            { 
                 string rfc = "";
                 string noCertificado = "";
                 string status = "";
                 string FechaIni = "";
                 string FechaFin = "";
                 string validezOblig = "";
-
-                //************ Leer el xml           
-                //  string pathXml = "C:\\DowLCO\\LCO_2014-01-06_2_L.xml";
-                string pathXml = rutaXMLSat + "LCO_2014-01-06_" + numAr + "_L.xml";
+                string rutaXMLSat = @"C:\DowLCO\";
+                  
+                //************ Leer el xml                           
+                string pathXml = rutaXMLSat + "LCO_"+fechaActs +"_" + numAr + "_L.xml";
 
                 XmlReader xmlReader = XmlReader.Create(new StreamReader(pathXml));
                 while (xmlReader.Read())
-                {  
+                {
                     if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "lco:Contribuyente")) //Si es este nodo 
                     {  //Get Datos RFC
                         if (xmlReader.HasAttributes)
@@ -127,7 +149,7 @@ namespace DowLCO
                     else
                     {
                         if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "lco:Certificado")) //Si es este nodo
-                        {    //Get Datos
+                        {    //Get Datos restantes
                             if (xmlReader.HasAttributes)
                                 validezOblig = xmlReader.GetAttribute("VlalidezObligaciones");
                             noCertificado = xmlReader.GetAttribute("noCertificado");
@@ -151,25 +173,37 @@ namespace DowLCO
             MessageBox.Show("Descargado Correctamente");
         }
 
-        private static void OnTimedEvent(object source, ElapsedEventArgs e)            
-        {
-            int numAr = 1;
+        private void Completed1(object sender, AsyncCompletedEventArgs e)
+        {   
             DateTime fechaAct = DateTime.Today;
             string fechaActs = fechaAct.ToString("yyy-MM-dd");
-            string pathDown = "ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/LCO_";            
-            //**************  Crea el directorio
             string rutaXMLSat = @"C:\DowLCO\";
-            //string pathDown, string fechaActs, string rutaXMLSat, int numAr;
-            WebClient webClient = new WebClient();
-            webClient.DownloadFileAsync(new Uri(pathDown + fechaActs + "_" + numAr + ".XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_" + numAr + ".XML.gz");
-
-        } 
-
-        private void Completed(object sender, AsyncCompletedEventArgs e)
-        {
-            MessageBox.Show("Download completed!");
+            //Extrae arxchivo .gz
+            Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_1.XML.gz");
+            //Una vez finalizado cambia status de bandera
+            Form1.downEnd1 = 1;            
         }
-
+        private void Completed2(object sender, AsyncCompletedEventArgs e)
+        {
+            DateTime fechaAct = DateTime.Today;
+            string fechaActs = fechaAct.ToString("yyy-MM-dd");
+            string rutaXMLSat = @"C:\DowLCO\";
+            //Extrae arxchivo .gz
+            Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_2.XML.gz");
+            //Una vez finalizado cambia status de bandera
+            Form1.downEnd2 = 1;            
+        }
+        private void Completed3(object sender, AsyncCompletedEventArgs e)
+        {
+            DateTime fechaAct = DateTime.Today;
+            string fechaActs = fechaAct.ToString("yyy-MM-dd");
+            string rutaXMLSat = @"C:\DowLCO\";
+            //Extrae arxchivo .gz
+            Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_3.XML.gz");
+            //Una vez finalizado cambia status de bandera
+            Form1.downEnd3 = 1;
+        }         
+       
         //Función extraer archivos .gz
         private string Extrgz(string infile)
         {
