@@ -43,7 +43,14 @@ namespace DowLCO
         {
             get { return Form1.downEnd3; }
             set { Form1.downEnd3 = value; }
-        }              
+        }
+
+        private static int downEnd4;
+        public static int DownEnd4
+        {
+            get { return Form1.downEnd4; }
+            set { Form1.downEnd4 = value; }
+        }    
 
         public Form1()
         {
@@ -86,12 +93,16 @@ namespace DowLCO
             WebClient webClient2 = new WebClient();
             webClient2.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed3);
             webClient2.DownloadFileAsync(new Uri(pathDown + fechaActs + "_3.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_3.XML.gz");
+
+            WebClient webClient3 = new WebClient();
+            webClient3.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed4);
+            webClient3.DownloadFileAsync(new Uri(pathDown + fechaActs + "_4.XML.gz"), rutaXMLSat + "LCO_" + fechaActs + "_4.XML.gz");
         }
 
         private static void OnTimedEvent(object source, ElapsedEventArgs e)
         {   //valida si las banderas han cambiado de estatus
             //para continuar 
-            if ((Form1.downEnd1 == 1) && (Form1.downEnd2 == 1) && (Form1.downEnd3 == 1))
+            if ((Form1.downEnd1 == 1) && (Form1.downEnd2 == 1) && (Form1.downEnd3 == 1) && (Form1.downEnd4 == 1))
             {
                 timer2.Enabled = false;
                 //llama leerXml
@@ -115,7 +126,7 @@ namespace DowLCO
             StreamWriter arch = new StreamWriter(pathLCO, true, Encoding.ASCII);
 
             //Recorrer los archivos                       
-            for (numAr = 1; numAr <= 3; numAr++)
+            for (numAr = 1; numAr <= 4; numAr++)
             {
                 //***********************Quitar firma   
                 Process process = new Process();                
@@ -125,7 +136,7 @@ namespace DowLCO
             }
 
             //************************Leer file XML            
-            for (numAr = 1; numAr <= 3; numAr++)
+            for (numAr = 1; numAr <= 4; numAr++)
             { 
                 string rfc = "";
                 string noCertificado = "";
@@ -151,7 +162,7 @@ namespace DowLCO
                         if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "lco:Certificado")) //Si es este nodo
                         {    //Get Datos restantes
                             if (xmlReader.HasAttributes)
-                                validezOblig = xmlReader.GetAttribute("VlalidezObligaciones");
+                            validezOblig = xmlReader.GetAttribute("ValidezObligaciones");
                             noCertificado = xmlReader.GetAttribute("noCertificado");
                             status = xmlReader.GetAttribute("EstatusCertificado");
                             FechaIni = xmlReader.GetAttribute("FechaInicio");
@@ -202,8 +213,19 @@ namespace DowLCO
             Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_3.XML.gz");
             //Una vez finalizado cambia status de bandera
             Form1.downEnd3 = 1;
-        }         
-       
+        }
+
+        private void Completed4(object sender, AsyncCompletedEventArgs e)
+        {
+            DateTime fechaAct = DateTime.Today;
+            string fechaActs = fechaAct.ToString("yyy-MM-dd");
+            string rutaXMLSat = @"C:\DowLCO\";
+            //Extrae arxchivo .gz
+            Extrgz(rutaXMLSat + "LCO_" + fechaActs + "_4.XML.gz");
+            //Una vez finalizado cambia status de bandera
+            Form1.downEnd4 = 1;
+        }     
+
         //Función extraer archivos .gz
         private string Extrgz(string infile)
         {
