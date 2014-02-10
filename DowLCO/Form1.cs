@@ -170,7 +170,7 @@ namespace DowLCO
                         }
                         else //Si lleva al final del nodo Contribuyente
                         {
-                            if ((xmlReader.NodeType == XmlNodeType.EndElement) && (xmlReader.Name == "lco:Contribuyente"))
+                            if ((xmlReader.NodeType == XmlNodeType.EndElement) && (xmlReader.Name == "lco:Certificado"))
                             {
                                 //Almaen y da formato en txt
                                 arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig);

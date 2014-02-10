@@ -25,3 +25,10 @@ C:\Users\Luis\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.Properties.Re
 C:\Users\Luis\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.csproj.GenerateResource.Cache
 C:\Users\Luis\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.exe
 C:\Users\Luis\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.pdb
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\bin\Debug\DowLCO.exe
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\bin\Debug\DowLCO.pdb
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.Form1.resources
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.Properties.Resources.resources
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.csproj.GenerateResource.Cache
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.exe
+C:\Users\Desarollo2\Documents\GitHub\DownLCO\DowLCO\obj\x86\Debug\DowLCO.pdb
