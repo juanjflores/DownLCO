@@ -232,10 +232,10 @@ namespace DownLCO
                         {    //Get Datos restantes
                             if (xmlReader.HasAttributes)
                                 validezOblig = xmlReader.GetAttribute("ValidezObligaciones");
-                            noCertificado = xmlReader.GetAttribute("noCertificado");
-                            status = xmlReader.GetAttribute("EstatusCertificado");
-                            FechaIni = xmlReader.GetAttribute("FechaInicio");
-                            FechaFin = xmlReader.GetAttribute("FechaFinal");
+                                noCertificado = xmlReader.GetAttribute("noCertificado");
+                                status = xmlReader.GetAttribute("EstatusCertificado");
+                                FechaIni = xmlReader.GetAttribute("FechaInicio");
+                                FechaFin = xmlReader.GetAttribute("FechaFinal");
                         }
                         else //Si lleva al final del nodo Contribuyente
                         {
