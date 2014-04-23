@@ -190,7 +190,7 @@ namespace DownLCO
                 System.IO.File.Delete(pathLCO);
             }
             //Crea directorio
-            StreamWriter arch = new StreamWriter(pathLCO, true, Encoding.ASCII);
+            StreamWriter arch = new StreamWriter(pathLCO, true);
 
             //Recorrer los archivos                       
             for (numAr = 1; numAr <= Form1.numArc; numAr++)
@@ -222,8 +222,9 @@ namespace DownLCO
                     {  //Get Datos RFC
                         if (xmlReader.HasAttributes)
                            rfc = xmlReader.GetAttribute("RFC");
-                            byte[] bytes = Encoding.Default.GetBytes(rfc);
-                            rfc = Encoding.UTF8.GetString(bytes);
+                           rfc = Convert.ToString(rfc);
+                           /* byte[] bytes = Encoding.Default.GetBytes(rfc);
+                            rfc = Encoding.UTF8.GetString(bytes);*/
 
                     }
                     else
@@ -240,9 +241,17 @@ namespace DownLCO
                         else //Si lleva al final del nodo Contribuyente
                         {
                             if ((xmlReader.NodeType == XmlNodeType.EndElement) && (xmlReader.Name == "lco:Certificado"))
-                            {
-                                //Almacen y da formato en txt
-                                arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig);
+                            {/*
+                                if((rfc=="ÑZT130614T88") || (rfc=="?ZT130614T88")){
+                                    //Almacen y da formato en txt
+                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);
+                                }else{
+                                    //Almacen y da formato en txt
+                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);
+                                    }*/
+                                 //Almacen y da formato en txt
+                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);                                
+
                             }
                         }
                     }
