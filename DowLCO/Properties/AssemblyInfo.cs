@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("DowLCO")]
+[assembly: AssemblyTitle("DownLCO")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DowLCO")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("HP")]
+[assembly: AssemblyProduct("DownLCO")]
+[assembly: AssemblyCopyright("Copyright © HP 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-[assembly: Guid("77ebcd67-e576-4da4-ac77-b0105766eaee")]
+[assembly: Guid("7cd6954c-8f2c-4e8f-bf31-ffd9eb995557")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //
