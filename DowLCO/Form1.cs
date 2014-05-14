@@ -15,6 +15,18 @@ using System.Diagnostics;
 using System.Xml;
 using System.Timers;
 
+
+/*  Author:  Guadalupe Santiago Morgado
+ *  Company: Plataformas
+ *  Version: 2.0
+ *  
+ *  Personal Comments:
+ *  Herramienta, permite la descarga de la Lista LCO
+ *  ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/LCO_
+ *  Solo definir en config No. de archivos y directorio 
+ *  De descarga
+ */
+
 namespace DownLCO
 {
     public partial class Form1 : Form

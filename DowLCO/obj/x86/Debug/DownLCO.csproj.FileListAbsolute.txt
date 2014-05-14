@@ -1,6 +1,7 @@
 C:\DownLCO\DownLCO\bin\Debug\DownLCO.exe.config
 C:\DownLCO\DownLCO\bin\Debug\DownLCO.exe
 C:\DownLCO\DownLCO\bin\Debug\DownLCO.pdb
+C:\DownLCO\DownLCO\obj\x86\Debug\DownLCO.csprojResolveAssemblyReference.cache
 C:\DownLCO\DownLCO\obj\x86\Debug\DownLCO.Form1.resources
 C:\DownLCO\DownLCO\obj\x86\Debug\DownLCO.Properties.Resources.resources
 C:\DownLCO\DownLCO\obj\x86\Debug\DownLCO.csproj.GenerateResource.Cache
