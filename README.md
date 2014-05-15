@@ -20,7 +20,11 @@ Es una pequeña herramienta para descargar la Lista de Contribuyentes Obligados 
 - Desarrollado en Visual Studio 2012
 
 ## Instrucciones de Uso
-Es necesario crear una carpeta donde se realizara la descarga de los archivos, una vez que de definio una carpeta es necesario actualizar el archivo App.config incluido para modificar la ruta, o dejar la ruta por default "C:\DownLCO\".
+- Es necesario crear una carpeta donde se realizara la descarga de los archivos, una vez que de definio una carpeta es necesario actualizar el archivo App.config incluido para modificar la ruta, o dejar la ruta por default "C:\DownLCO\".
+- Este es un ejemplo del archivo de texto que genera:
+numerodeserie|fechainicial|fechafina|RFC|estatuscertificado|validezobligaciones
+00001000000000066868|2005-01-06 01:56:24|2005-01-06 17:29:15|MOVR711205IN2|R|1
+- El estatus del certificado puede ser A(Activo), R(Revocado) o C(Cancelado), y las validez de obligaciones puede ser 1(Valido) o 0(Invalido), se genera una linea por cada certificado asociado a un RFC.
 
 ## Un ejemplo del archivo App.Config
 
