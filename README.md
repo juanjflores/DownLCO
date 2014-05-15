@@ -17,6 +17,7 @@ Es una pequeña herramienta para descargar la Lista de Contribuyentes Obligados 
 ## Dependencias
 - Es necesario tener instalado OpenSSL para Windows, ya que es necesario para la verificación de la firma y la exportación del XML limpio.
 - Framework 3.5 de .NET
+- Desarrollado en Visual Studio 2012
 
 ## Instrucciones de Uso
 Es necesario crear una carpeta donde se realizara la descarga de los archivos, una vez que de definio una carpeta es necesario actualizar el archivo App.config incluido para modificar la ruta, o dejar la ruta por default "C:\DownLCO\".
