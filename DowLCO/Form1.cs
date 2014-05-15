@@ -15,8 +15,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Timers;
 
-
-/*  Author:  Guadalupe Santiago Morgado
+/*  Author:  Guadalupe Santiago Morgado / Luis Alberto Cisneros Alvarez
  *  Company: Plataformas
  *  Version: 2.0
  *  
@@ -33,8 +32,7 @@ namespace DownLCO
     {
         private static System.Timers.Timer timer2;
        
-        //Declaración de variables
-        //definen el estatus, si los archivos han sido descargados
+        //Declaración de variables, estas definen el estatus, si los archivos han sido descargados.
         private static int downEnd1;
         public static int DownEnd1
         {
@@ -98,68 +96,47 @@ namespace DownLCO
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //directorio guardará los archivos
+            //Cargamos las configuraciones del AppConfig.
             Form1.rutaFtpSat = ConfigurationManager.AppSettings["RUTAFTPSAT"];
             Form1.pathDown = ConfigurationManager.AppSettings["DIRECTORIO"];
             Form1.numArc = Convert.ToInt16((ConfigurationManager.AppSettings["NUMARCHIVOS"]));
             Form1.PathArchTxt = ConfigurationManager.AppSettings["NAMETXTLCO"];
-
-            //**************  Crea el directorio donde se descargaran los archivos           
+            //Creamos el directorio (si no existe), donde se descargaran los archivos.
             if (!Directory.Exists(Form1.pathDown))
             {
                 Directory.CreateDirectory(Form1.pathDown);
             }
-
-            DownloadFiles();         
-            //Extrae los archivos descargados
-            ExtraerFiles();
+            //Descargamos los archivos.
+            DescargarGZ();         
+            //Descomprimimos los archivos descargados.
+            ExtraerXML();
+            //Leemos los XML's.
             LeerXML();
-
         }
-
-        public void DownloadFiles()
+        //Función para descargar las partes de la LCO comprimidas en archivos en formato .GZ
+        public void DescargarGZ()
         {
-            //Get fecha actual
+            //Obtenemos la fecha actual, apartir de la cual se descargara la LCO del día.
             DateTime fechaAct = DateTime.Today;
+            //Formateamos la fecha actual.
             string fechaActs = fechaAct.ToString("yyy-MM-dd");
-            // Declara y usa la variable local ciclos
+            //Se declara la variable ciclos, la cual se ejecutara hasta cumplir con el numero de archivos.
             for (int ciclos = 1; ciclos <= Form1.numArc; ciclos++)
             {
-                //string numb = Thread.CurrentThread.Name;
                 try
                 {
+                    //Abrimos una nueva conexión desde la cual se descargara la parte de la LCO.
                     WebClient webClient1 = new WebClient();
                     webClient1.DownloadFile(new Uri(Form1.rutaFtpSat + fechaActs + "_" + ciclos + ".XML.gz"), Form1.pathDown + "LCO_" + fechaActs + "_" + ciclos + ".XML.gz");
                 }
                 catch { 
 
                 }
-              //  webClient1.DownloadFileAsync(new Uri(Form1.rutaFtpSat + fechaActs + "_" + ciclos + ".XML.gz"), Form1.pathDown + "LCO_" + fechaActs + "_" + ciclos + ".XML.gz");                
             }
         }
-        private static void OnTimedEvent(object source, ElapsedEventArgs e)
-        {   //valida si las banderas han cambiado de estatus
-            //para continuar 
-            if ((Form1.downEnd1 == 1) && (Form1.downEnd2 == 1) && (Form1.downEnd3 == 1) && (Form1.downEnd4 == 1))
-            {
-                timer2.Enabled = false;
-                //llama leerXml
-                LeerXML();
-            }
-        }
-
-        private void Completed(object sender, AsyncCompletedEventArgs e)
+        //Función para extraer los archivos XML del formatoGZ
+        public void ExtraerXML()
         {
-            DateTime fechaAct = DateTime.Today;
-            string fechaActs = fechaAct.ToString("yyy-MM-dd");
-            string rutaXMLSat = @"C:\DowLCO\";
-            //Extrae arxchivo .gz
-            Extrgz(Form1.pathDown + "LCO_" + fechaActs + "_1.XML.gz");
-            //Una vez finalizado cambia status de bandera
-            Form1.downEnd1 = 1;
-        }
-
-        public void ExtraerFiles() {
             IList listaArvchivos = Directory.GetFiles(Form1.pathDown).ToList();
             foreach (string archivo in listaArvchivos) {
                 string nameFile = archivo;
@@ -167,12 +144,12 @@ namespace DownLCO
             }
 
         }
-
+        //Clase ppara extraer los GZ
         public string Extrgz(string infile)
         {
             string dir = Path.GetDirectoryName(infile);
             string decompressionFileName = dir + "\\" + Path.GetFileNameWithoutExtension(infile);
-            using (GZipStream instream = new GZipStream(File.OpenRead(infile), CompressionMode.Decompress))// ArgumentException...
+            using (GZipStream instream = new GZipStream(File.OpenRead(infile), CompressionMode.Decompress))
             {
                 using (FileStream outputStream = new FileStream(decompressionFileName, FileMode.Append, FileAccess.Write))
                 {
@@ -186,91 +163,87 @@ namespace DownLCO
             }
             return decompressionFileName;
         }
-
-        //
+        //Función para Leer los archivos XML descomprimidos.
         public static void LeerXML()
         {
-            //************************Leer direcctorio donde se encuentran los xml descargados
+            //Lectura de la carpeta donde se toman los archivos XML's
             int numAr = 0;
+            //Obtenemos la fecha actual
             DateTime fechaAct = DateTime.Today;
+            //Formateamos la fecha
             string fechaActs = fechaAct.ToString("yyy-MM-dd");
-
-            //************************* Crear directorio txt donde se almacenara info
-            string pathLCO = Form1.PathArchTxt; // "C:\\DowLCO\\LCO.txt";
+            //Verificamos si existe el directorio donde se guardara el TXT.
+            string pathLCO = Form1.PathArchTxt;
             if (File.Exists(pathLCO))
             {
                 System.IO.File.Delete(pathLCO);
             }
-            //Crea directorio
+            //Creamos el archivo.
             StreamWriter arch = new StreamWriter(pathLCO, true);
-
-            //Recorrer los archivos                       
+            //Leemos cada uno de los archivos con sus firmas.
             for (numAr = 1; numAr <= Form1.numArc; numAr++)
             {
-                //***********************Quitar firma   
+                //Verificamos la firma de cada uno de los archivos, y si es correcta, la eliminamos del archivo XML para poder leerla.  
                 Process process = new Process();
                 process.StartInfo = new System.Diagnostics.ProcessStartInfo(@"C:\Windows\System32\cmd.exe", "/C C:\\OpenSSl\\bin\\openssl.exe smime -decrypt -verify -inform DER -in \"C:\\DowLCO\\LCO_" + fechaActs + "_" + numAr + ".xml\" -noverify -out \"C:\\DowLCO\\LCO_" + fechaActs + "_" + numAr + "_L.xml\"");
                 process.Start();
                 process.WaitForExit();
             }
-
-            //************************Leer file XML            
+            //Lectura de los archivos XML, que ya no contienen firma.          
             for (numAr = 1; numAr <= Form1.numArc; numAr++)
             {
+                //Inicializacion de las variables
                 string rfc = "";
                 string noCertificado = "";
-                string status = "";
+                string estatus = "";
                 string FechaIni = "";
                 string FechaFin = "";
                 string validezOblig = "";
-
-                //************ Leer el xml                           
+                //Declaramos el Path de los archivos XML limpios        
                 string pathXml = pathDown + "LCO_" + fechaActs + "_" + numAr + "_L.xml";
-
+                //Declaración del Reader.
                 XmlReader xmlReader = XmlReader.Create(new StreamReader(pathXml));
                 while (xmlReader.Read())
                 {
+                    //Lectura de cada uno de los Nodos de Contibuyentes
                     if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "lco:Contribuyente")) //Si es este nodo 
-                    {  //Get Datos RFC
+                    {  //Obtenemos el RFC.
                         if (xmlReader.HasAttributes)
                            rfc = xmlReader.GetAttribute("RFC");
                            rfc = Convert.ToString(rfc);
-                           /* byte[] bytes = Encoding.Default.GetBytes(rfc);
-                            rfc = Encoding.UTF8.GetString(bytes);*/
-
                     }
                     else
                     {
+                        //Lectura de los Nodos de Certificado para cada uno de los Contribuyentes.
                         if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "lco:Certificado")) //Si es este nodo
-                        {    //Get Datos restantes
+                        {
+                            //Obtenemos los datos.
                             if (xmlReader.HasAttributes)
-                                validezOblig = xmlReader.GetAttribute("ValidezObligaciones");
-                                noCertificado = xmlReader.GetAttribute("noCertificado");
-                                status = xmlReader.GetAttribute("EstatusCertificado");
-                                FechaIni = xmlReader.GetAttribute("FechaInicio");
-                                FechaFin = xmlReader.GetAttribute("FechaFinal");
+                            //Validez de Obligaciones
+                            validezOblig = xmlReader.GetAttribute("ValidezObligaciones");
+                            //Número de Certificado
+                            noCertificado = xmlReader.GetAttribute("noCertificado");
+                            //Estatus del Certificado
+                            estatus = xmlReader.GetAttribute("EstatusCertificado");
+                            //Fecha de Inicio de la Vigencia del Certificado.
+                            FechaIni = xmlReader.GetAttribute("FechaInicio");
+                            //Fecha Final de la Vigencia del Certificado
+                            FechaFin = xmlReader.GetAttribute("FechaFinal");
                         }
-                        else //Si lleva al final del nodo Contribuyente
+                        else //Si lleva al final del nodo Contribuyente.
                         {
                             if ((xmlReader.NodeType == XmlNodeType.EndElement) && (xmlReader.Name == "lco:Certificado"))
-                            {/*
-                                if((rfc=="ÑZT130614T88") || (rfc=="?ZT130614T88")){
-                                    //Almacen y da formato en txt
-                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);
-                                }else{
-                                    //Almacen y da formato en txt
-                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);
-                                    }*/
-                                 //Almacen y da formato en txt
-                                    arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + status + "|" + validezOblig,true,Encoding.ASCII);                                
-
+                            {
+                                //Generación línea por línea TXT (importante el Encoding en ASCII).
+                                arch.WriteLine(noCertificado + "|" + FechaIni + "|" + FechaFin + "|" + rfc + "|" + estatus + "|" + validezOblig, true, Encoding.ASCII);
                             }
                         }
                     }
                 }
             }
-            //Close file txt
+            //Cerramos el TXT
             arch.Close();
+            //LCO Descargada correctamente
             MessageBox.Show("Descargado Correctamente");
         }
     }
