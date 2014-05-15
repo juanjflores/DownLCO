@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Downlco : Herramienta para descargar la Lista de Contribuyentes Obligados (LCO), del Servicio de Administración Tributaria (SAT)" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Downlco</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/VirtualCFDI/DownLCO">View on GitHub</a>
+
+          <h1 id="project_title">Downlco</h1>
+          <h2 id="project_tagline">Herramienta para descargar la Lista de Contribuyentes Obligados (LCO), del Servicio de Administración Tributaria (SAT)</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/VirtualCFDI/DownLCO/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/VirtualCFDI/DownLCO/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><img src="https://virtualcfdi.com/img/logo404.png" alt="DownLCO"></p>
+
+<h1>
+<a name="downlco" class="anchor" href="#downlco"><span class="octicon octicon-link"></span></a>DownLCO</h1>
+
+<p>Es una pequeña herramienta para descargar la Lista de Contribuyentes Obligados del SAT (LCO), donde se encuentran todos los certificados de los Contribuyentes en México ante el SAT y su validez de obligaciones ante el Servicio de Administración Tributaria, la lista se encuentra en distintos archivos XML cifrados con PKCS7.</p>
+
+<h2>
+<a name="caracteristicas" class="anchor" href="#caracteristicas"><span class="octicon octicon-link"></span></a>Caracteristicas</h2>
+
+<ul>
+<li>Configuración del "PATH" de descarga del FTP del SAT.</li>
+<li>Configuración del número de archivos que componen la LCO.</li>
+<li>Manejo de excepción de la conexión, si esta se pierde.</li>
+<li>Descompresión de los archivos en formato .tar a .xml</li>
+<li>Verificación de la autenticidad de los archivos XML firmados en PKCS7 mediante OPENSSL.</li>
+<li>Conversión de todos los archivos XML "limpios" de la firma, a un unico archivo de texto plano.</li>
+<li>Configuración de ruta donde se descargan los archivos.</li>
+<li>Personalización de nombre del archivo de texto.</li>
+</ul><h2>
+<a name="dependencias" class="anchor" href="#dependencias"><span class="octicon octicon-link"></span></a>Dependencias</h2>
+
+<ul>
+<li>Es necesario tener instalado OpenSSL para Windows, ya que es necesario para la verificación de la firma y la exportación del XML limpio.</li>
+<li>Framework 3.5 de .NET</li>
+<li>Desarrollado en Visual Studio 2012</li>
+</ul><h2>
+<a name="instrucciones-de-uso" class="anchor" href="#instrucciones-de-uso"><span class="octicon octicon-link"></span></a>Instrucciones de Uso</h2>
+
+<ul>
+<li>Es necesario crear una carpeta donde se realizara la descarga de los archivos, una vez que de definio una carpeta es necesario actualizar el archivo App.config incluido para modificar la ruta, o dejar la ruta por default "C:\DownLCO\".</li>
+<li>Este es un ejemplo del archivo de texto que genera:
+numerodeserie|fechainicial|fechafina|RFC|estatuscertificado|validezobligaciones
+00001000000000066868|2005-01-06 01:56:24|2005-01-06 17:29:15|MOVR711205IN2|R|1</li>
+<li>El estatus del certificado puede ser A(Activo), R(Revocado) o C(Cancelado), y las validez de obligaciones puede ser 1(Valido) o 0(Invalido), se genera una linea por cada certificado asociado a un RFC.</li>
+</ul><h2>
+<a name="un-ejemplo-del-archivo-appconfig" class="anchor" href="#un-ejemplo-del-archivo-appconfig"><span class="octicon octicon-link"></span></a>Un ejemplo del archivo App.Config</h2>
+
+<div class="highlight highlight-xml"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;appSettings&gt;</span>
+    <span class="c">&lt;!--RUTA FTP SAT--&gt;</span>
+    <span class="nt">&lt;add</span> <span class="na">key=</span><span class="s">"RUTAFTPSAT"</span> <span class="na">value=</span><span class="s">"ftp://ftp2.sat.gob.mx/agti_servicio_ftp/cfds_ftp/LCO_"</span><span class="nt">/&gt;</span>
+    <span class="c">&lt;!--DIRECTORIO A GUARDAR ARCHIVOS--&gt;</span>
+    <span class="nt">&lt;add</span> <span class="na">key=</span><span class="s">"DIRECTORIO"</span> <span class="na">value=</span><span class="s">"C:\DownLCO\"</span><span class="nt">/&gt;</span>
+    <span class="c">&lt;!--NUM ARCHIVOS A DESCARGAR--&gt;</span>
+    <span class="nt">&lt;add</span> <span class="na">key=</span><span class="s">"NUMARCHIVOS"</span> <span class="na">value=</span><span class="s">"4"</span><span class="nt">/&gt;</span>
+    <span class="c">&lt;!-- NOMBRE ARCHIVO TXTLCO--&gt;</span>
+    <span class="nt">&lt;add</span> <span class="na">key=</span><span class="s">"NAMETXTLCO"</span> <span class="na">value=</span><span class="s">"C:\\DownLCO\\LCO.txt"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/appSettings&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+
+<h2>
+<a name="licencia" class="anchor" href="#licencia"><span class="octicon octicon-link"></span></a>Licencia</h2>
+
+<p>The MIT License (MIT)
+Copyright (c) 2014 Infraestructura Multimedia Especializada S.A. de C.V.</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Downlco maintained by <a href="https://github.com/VirtualCFDI">VirtualCFDI</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
