@@ -37,7 +37,7 @@ Es necesario crear una carpeta donde se realizara la descarga de los archivos, u
     <add key="NAMETXTLCO" value="C:\\DownLCO\\LCO.txt"/>
   </appSettings>
 </configuration>
-```xml
+```
 
 ## Licencia
 The MIT License (MIT)
