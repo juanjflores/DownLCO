@@ -200,9 +200,10 @@ namespace DownLCO
                 string FechaFin = "";
                 string validezOblig = "";
                 //Declaramos el Path de los archivos XML limpios        
-                string pathXml = pathDown + "LCO_" + fechaActs + "_" + numAr + "_L.xml";
+                string pathXml = pathDown + "LCO_" + fechaActs + "_" + numAr + "_L.xml";             
                 //Declaración del Reader.
-                XmlReader xmlReader = XmlReader.Create(new StreamReader(pathXml));
+                StreamReader LCOReader = new StreamReader(pathXml);
+                XmlReader xmlReader = XmlReader.Create(LCOReader);
                 while (xmlReader.Read())
                 {
                     //Lectura de cada uno de los Nodos de Contibuyentes
@@ -240,15 +241,19 @@ namespace DownLCO
                         }
                     }
                 }
+                //Liberamos los recursos del lector.
+                LCOReader.Dispose();
                 //Se borra el archivo GZ.
                 System.IO.File.Delete(@Form1.pathDown + "LCO_" + fechaActs + "_" + numAr + ".XML.gz");
                 //Se borra el archivo XML con la firma.
                 System.IO.File.Delete(@Form1.pathDown + "LCO_" + fechaActs + "_" + numAr + ".xml");
                 //Se borra el archivo XML limpio.
-                System.IO.File.Delete(@pathXml);
+                System.IO.File.Delete(@pathXml);  
             }
-            //Cerramos el TXT
+            //Cerramos el TXT.
             arch.Close();
+            //Salimos de la aplicación.
+            Application.Exit();
             //LCO Descargada correctamente
             //MessageBox.Show("Descargado Correctamente");
         }
